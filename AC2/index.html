@@ -20,49 +20,169 @@
     <hr>
 
     <h2>Questão 1</h2>
-    <p><strong>Invariante</strong>: Antes de cada iteração do laço <code>for</code> (antes de comparar \( j \) com \( n
-        \)), <code>maximum</code> contém o maior valor de \( A[1 \dots j-1] \).</p>
+    <p><strong>Questão 1.2.1 do livro Algoritmos em C do professor Paulo Feofiloff.</strong></p>
+    Um <strong>invariante de laço</strong> é uma relação entre os valores das variáveis que vale no início de
+    cada iteração do processo iterativo. Os invariantes explicam o funcionamento do
+    processo iterativo e permitem provar, por indução, que ele tem o efeito
+    desejado. Considere, por exemplo, a função <strong>Max</strong> descrita abaixo.
 
-    <p><strong>Caso Base</strong>: Para \( j = 2 \), <code>maximum = A[1]</code>. Subvetor \( A[1 \dots 1] = \{A[1]\}
-        \), <code>maximum</code> é o maior. Válido.</p>
+    <pre><code>
+  Algoritmo: Max(A, n)
+    Entrada: um vetor A com n inteiros, cujos índice vão de 1 a n
+    Saída: o valor de um elemento máximo do vetor A[1..n]
 
-    <p><strong>Passo Indutivo</strong>: Suponha que <code>maximum</code> é o maior de \( A[1 \dots j-1] \).<br>
-        - Se <code>maximum < A[j]</code>, <code>maximum = A[j]</code>, maior de \( A[1 \dots j] \).<br>
-        - Se <code>maximum ≥ A[j]</code>, <code>maximum</code> é maior de \( A[1 \dots j] \).<br>
-        Para \( j+1 \), <code>maximum</code> é maior de \( A[1 \dots j] \). Válido.</p>
+1.    maximum = A[1]
+2.    for j = 2 to n 
+3.        if maximum &lt; A[j]
+4.            maximum = A[j]
+5.    return maximum
+</pre></code>
 
-    <p><strong>Término</strong>: Para \( j = n \), <code>maximum</code> é maior de \( A[1 \dots n-1] \).<br>
-        - Se <code>maximum < A[n]</code>, <code>maximum = A[n]</code>, maior de \( A[1 \dots n] \).<br>
-        - Se <code>maximum ≥ A[n]</code>, <code>maximum</code> é maior de \( A[1 \dots n] \).<br>
-        Retorna o maior de \( A[1 \dots n] \).</p>
+    O processo iterativo controlado pelo laço <strong>for</strong>
+    tem o seguinte invariante:
+
+    <p>
+        <strong>"No início de cada iteração do laço for
+            (imediatamente antes da comparação de j com n),
+            a variável maximum guarda o valor de
+            um elemento máximo do subvetor A[1 ... j-1]"</strong>.
+    </p>
+
+    <p>
+        Mostre que o invariante da função <strong>Max</strong> vale no
+        início da primeira iteração do laço <strong>for</strong>. Suponha que o invariante vale
+        no início de uma iteração qualquer e mostre que ele vale no
+        início da iteração seguinte. Suponha que o invariante vale no
+        início da última iteração e deduza daí que a função devolve
+        um elemento máximo do vetor A[1...n].
+    </p>
+
+    <hr>
+
+    <h2>RESPOSTA - Questão 1</h2>
+    <p><strong>Invariante</strong>: Antes de cada iteração do laço <code>for</code> (imediatamente antes de comparar \(
+        j \) com \( n \)), a variável <code>maximum</code> contém o maior valor do subvetor \( A[1 \dots j-1] \).</p>
+
+    <p><strong>Caso Base</strong>: Para \( j = 2 \), <code>maximum = A[1]</code>. O subvetor \( A[1 \dots 1] = \{A[1]\}
+        \) contém apenas <code>A[1]</code>, logo <code>maximum</code> é o maior valor desse subvetor. O invariante é
+        válido.</p>
+
+    <p><strong>Passo Indutivo</strong>: Suponha que, no início da iteração com índice \( j \), o invariante vale, ou
+        seja, <code>maximum</code> é o maior valor do subvetor \( A[1 \dots j-1] \). Analisemos o que ocorre durante a
+        iteração para garantir que o invariante vale no início da próxima iteração (para \( j+1 \)):<br>
+        - <strong>Caso 1: Se <code>maximum < A[j]</code></strong>, o algoritmo atualiza <code>maximum = A[j]</code>.
+        Como <code>maximum</code> era o maior de \( A[1 \dots j-1] \) (pela hipótese indutiva) e \( A[j] >
+        \text{maximum} \), então \( A[j] \) é maior que todos os elementos de \( A[1 \dots j-1] \). Assim, após a
+        atualização, <code>maximum = A[j]</code> é o maior valor do subvetor \( A[1 \dots j] \), pois esse subvetor
+        inclui \( A[1 \dots j-1] \cup \{A[j]\} \).<br>
+        - <strong>Caso 2: Se <code>maximum ≥ A[j]</code></strong>, o algoritmo não altera <code>maximum</code>. Como
+        <code>maximum</code> é o maior de \( A[1 \dots j-1] \) (pela hipótese indutiva) e \( \text{maximum} \geq A[j]
+        \), então <code>maximum</code> é maior ou igual a todos os elementos de \( A[1 \dots j] \), que é \( A[1 \dots
+        j-1] \cup \{A[j]\} \). Portanto, <code>maximum</code> permanece como o maior valor de \( A[1 \dots j] \).<br>
+        Em ambos os casos, ao final da iteração, <code>maximum</code> é o maior valor de \( A[1 \dots j] \). No início
+        da próxima iteração (com índice \( j+1 \)), o invariante exige que <code>maximum</code> seja o maior de \( A[1
+        \dots (j+1)-1] = A[1 \dots j] \), o que foi garantido. Portanto, o invariante é válido para \( j+1 \).
+    </p>
+
+    <p><strong>Término</strong>: Quando o laço termina, \( j = n \), e o invariante garante que <code>maximum</code> é o
+        maior valor de \( A[1 \dots n-1] \). Na última iteração, o algoritmo verifica:<br>
+        - Se <code>maximum < A[n]</code>, atualiza <code>maximum = A[n]</code>, que passa a ser o maior de \( A[1 \dots
+        n] \), pois \( A[n] > \text{maximum} \).<br>
+        - Se <code>maximum ≥ A[n]</code>, <code>maximum</code> permanece inalterado e é maior ou igual a todos os
+        elementos de \( A[1 \dots n] \), pois já era o maior de \( A[1 \dots n-1] \).<br>
+        Assim, ao retornar <code>maximum</code>, a função devolve o maior valor do vetor \( A[1 \dots n] \).</p>
 
     <hr>
 
     <h2>Questão 2</h2>
-    <p><strong>A.</strong> Mostrar que \( A' \) é permutação de \( A \).</p>
 
-    <p><strong>B. Invariante (linhas 2–4)</strong>: Para \( j \leq k \leq A.length \), \( A[k] \geq A[j-1] \).</p>
+    <p><strong>[CORMEN et al.] Questão 2-2 (Corretude do Bubblesort).</strong>
+        Bubblesort é um algoritmo de ordenação popular, mas ineficiente.
+        Ele funciona fazendo varreduras pelo vetor,
+        trocando repetidamente elementos adjacentes que
+        estiverem fora de ordem.
 
-    <p><strong>Prova</strong>:<br>
-        1. <strong>Caso Base</strong>: Para \( j = A.length \), \( A[A.length] \geq A[A.length-1] \). Válido.<br>
-        2. <strong>Passo Indutivo</strong>: Suponha que vale para \( j \).<br>
-        - Se \( A[j] < A[j-1] \), troca garante \( A[j] \geq A[j-1] \).<br>
-            - Se \( A[j] \geq A[j-1] \), sem troca. Para \( j-1 \), \( A[k] \geq A[j-2] \). Válido.<br>
-            3. <strong>Término</strong>: Para \( j = i+1 \), \( A[k] \geq A[i] \) para \( k \geq i+1 \). \( A[i] \) é
-            menor de \( A[i \dots A.length] \).</p>
+    <pre><code>
+  Algoritmo: BubbleSort(A)
+    Entrada: um vetor de inteiros A 
+    Saída: vetor A ordenado em ordem crescente
 
-    <p><strong>C. Invariante (linhas 1–4)</strong>: \( A[1 \dots i] \) ordenado (\( A[1] \leq \dots \leq A[i] \)), e \(
-        A[k] \geq A[i] \) para \( k \geq i+1 \).</p>
+1.    for i = 1 to A.length-1 
+2.      for j = A.length downto i+1 
+3.        if A[j] &lt; A[j-1]
+4.          exchange A[j] with A[j-1]
+</pre></code>
 
-    <p><strong>Prova</strong>:<br>
-        1. <strong>Caso Base</strong>: Para \( i = 1 \), \( A[1 \dots 1] \) ordenado. Válido.<br>
-        2. <strong>Passo Indutivo</strong>: Suponha que vale para \( i \). Laço interno garante \( A[i+1] \geq A[i] \),
-        \( A[1 \dots i+1] \) ordenado. Válido.<br>
-        3. <strong>Término</strong>: Para \( i = A.length \), \( A[1 \dots A.length] \) ordenado: \( A'[1] \leq \dots
-        \leq A'[n] \).</p>
+    Responda os itens abaixo:
+    <ol type="A">
+        <li>
+            Seja \(A'\) o vetor resultante após a aplicação do algoritmo
+            \(\textbf{BubbleSort(A)}\). Para provar que o BubbleSort está
+            correto, nós precisamos provar que ele termina e que
+            $$
+            \begin{equation}\label{eq:123}
+            A'[1] \leq A'[2] \leq \cdots \leq A'[n].
+            \end{equation}
+            $$
+            onde \(n = A.length\). A fim de mostrar que BubbleSort
+            de fato ordena o array dado como entrada,
+            o que mais precisamos provar?
+        </li>
+        <li>Enuncie com precisão um invariante de laço para o laço
+            <strong>for</strong> das linhas 2 a 4 e prove que esse invariante
+            de laço é válido. Sua prova deve usar a estrutura da prova do
+            invariante de laço em 3 etapas que foi
+            apresentada em sala de aula (Caso Base, Passo Indutivo
+            e Término).
+        </li>
+        <li>Usando a condição de término do invariante de laço demonstrado
+            na parte (B) acima, enuncie um invariante de laço para o laço
+            for das linhas 1 a 4 que permita provar a desigualdade (2.3).
+            Sua prova deve empregar a estrutura da prova do
+            invariante de laço apresentada em sala de aula.</li>
+        <li>Qual é o tempo de execução do pior caso de bubblesort?
+            Como ele se compara com o tempo de
+            de execução da ordenação por inserção?</li>
+    </ol>
+    </p>
 
-    <p><strong>D.</strong> Pior caso: \( \Theta(n^2) \). Igual à ordenação por inserção, mas inserção faz menos trocas e
-        é melhor para vetores quase ordenados.</p>
+    <hr />
+
+    <h2>RESPOSTA - Questão 2</h2>
+    <p><strong>A. </strong> Além de \( A'[1] \leq \cdots \leq A'[n] \) e término, provar que \( A' \)
+        é permutação de \( A \). Isso garante que o algoritmo só reordena, sem mudar os elementos.</p>
+
+    <p><strong>B. Invariante do laço interno (linhas 2–4)</strong></p>
+    <p><strong>Invariante</strong>: Para \( j \leq k \leq A.length \), \( A[k] \geq A[j-1] \). Ou seja, elementos de \(
+        A[j \dots A.length] \) são pelo menos tão grandes quanto \( A[j-1] \).</p>
+    <p><strong>Prova</strong>:
+    <ul>
+        <li><strong>Caso Base</strong>: \( j = A.length \), só temos \( A[A.length] \geq A[A.length-1] \).</li>
+        <li><strong>Passo Indutivo</strong>: Suponha que vale para \( j \). Se \( A[j] < A[j-1] \), troca faz \(
+                A[j]=A[j-1] \), que é maior que o novo \( A[j-1] \). Se \( A[j] \geq A[j-1] \), sem troca. Em ambos,
+                para \( j-1 \), \( A[k] \geq A[j-2] \).</li>
+        <li><strong>Término</strong>: Para \( j = i \), \( A[k] \geq A[i] \) para \( k \geq i+1 \). Logo, \( A[i] \) é o
+            menor de \( A[i \dots A.length] \).</li>
+    </ul>
+    </p>
+
+    <p><strong>C. Invariante do laço externo (linhas 1–4)</strong></p>
+    <p><strong>Invariante</strong>: \( A[1 \dots i] \) está ordenado (\( A[1] \leq \cdots \leq A[i] \)), e \( A[k] \geq
+        A[i] \) para \( k \geq i+1 \). Contém os \( i \) menores elementos.</p>
+    <p><strong>Prova</strong>:
+    <ul>
+        <li><strong>Caso Base</strong>: \( i = 1 \), \( A[1] \) é ordenado. Válido.</li>
+        <li><strong>Passo Indutivo</strong>: Suponha que vale para \( i \). Laço interno garante \( A[i+1] \leq A[k] \)
+            para \( k \geq i+2 \), e \( A[i] \leq A[i+1] \). Assim, \( A[1 \dots i+1] \) fica ordenado.</li>
+        <li><strong>Término</strong>: Para \( i = A.length \), \( A[1 \dots A.length] \) está ordenado: \( A'[1] \leq
+            \cdots \leq A'[n] \).</li>
+    </ul>
+    </p>
+
+    <p><strong>D. Tempo de execução</strong></p>
+    <p>Pior caso: \( \Theta(n^2) \). Laço interno faz \( \sum_{i=1}^{n-1} (n-i) = \frac{n(n-1)}{2} \) comparações. Igual
+        à ordenação por inserção, mas inserção é mais rápida em vetores quase ordenados (\( O(n) \) no melhor caso) e
+        faz menos movimentações (deslocamentos vs. trocas).</p>
 
 </body>
 
