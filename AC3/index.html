@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Modelo de uso do MathJax (HTML+Latex)</title>
+
+  <!-- MATHJAX 3 (através da CDN) -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- MATHJAX 3 (salvo no computador) -->
+  <!-- <script type="text/javascript" async src="../../../Aplicativos/MathJax-master/es5/tex-mml-chtml.js" async></script> -->
+</head>
+
+<body>
+
+  <h1>Avaliação Continuada 03</h1>
+  <h1>(Projetando Algoritmos Iterativos)</h1>
+  <hr />
+  <h1>Questão 1</h1>
+  <ul>
+    <li>
+      <p><strong>Questão 1 (Partição).</strong> A entrada é uma lista \( L[1..n] \) de números, com \(n \geq 1\).
+        Lembre-se que os nossos arrays nessa disciplina começam com o índice \(1\). O elemento \(L[1]\) é chamado de
+        pivô. Seja \(k\) o número de elementos de \(L\) com valor menor ou igual ao pivô. Seu objetivo é especificar um
+        algoritmo de <strong>tempo linear</strong> \(\Theta(n)\) para reorganizar os elementos de \(L\) de modo que as
+        três condições a seguir sejam satisfeitas:</p>
+      <ul>
+        <li>O pivô \(L[1]\) seja reposicionado para a posição \(k\).</li>
+        <li>Os elementos com valor menor ou igual ao pivô sejam colocados nas \(k\) primeiras posições.</li>
+        <li>Os elementos com valor maior que o pivô sejam colocados nas últimas \(n-k\) posições.</li>
+      </ul>
+      <p><strong>Obs. 1:</strong> Este problema poderia ser resolvido simplesmente ordenando a lista, mas neste caso
+        gastaria tempo \(\Theta(n\log{n})\).</p>
+      <p><strong>Obs. 2:</strong> Este algoritmo é utilizado pelo algoritmo de ordenação Quicksort.</p>
+      <p><strong>Passos Básicos:</strong> Utilize dois índices \(i\) e \(j\). O índice \(i\) vai da posição \(2\) em
+        direção em final da lista, e o índice \(j\) vai da última posição em direção ao início da lista. Em cada
+        iteração, avançe o \(i\) se \(L[i]\) é menor ou igual ao pivô. Caso contrário, avançe o \(j\) se \(L[j]\) é
+        maior que o pivô. Se nenhuma destas condições ocorrer, troque \(L[i]\) com \(L[j]\) e avance \(i\) e \(j\). A
+        repetição termina quando \(j &lt; i\). Finalmente, reposicione o pivô de modo que apenas elementos maiores que o
+        pivô estejam à direita dele.</p>
+      <p><strong>Invariante de laço:</strong><br /> INV1: Todos os elementos nas posições menores que \(i\) possuem
+        valor menor ou igual ao pivô.<br /> INV2: Todos os elementos nas posições maiores que \(j\) possuem valor maior
+        que o pivô.</p>
+
+      <h2>Forneça resposta para cada um dos itens abaixo:</h2>
+      <ol type="a">
+        <li>Forneça uma medida de progresso, e argumente que o algoritmo termina.</li>
+        <li>Indique como estabelecer o invariante do laço, ou seja, quais ações no código pré-laço tornam o invariante
+          do laço verdadeiro na primeira iteração. Justifique.</li>
+        <li>Qual o código do laço? Argumente que ele mantém o invariante do laço.</li>
+        <li>Argumente que o invariante do laço e a condição de saída garantem que, assim que a execução sair do laço
+          teremos \(j = i-1\).</li>
+        <li>Qual o código pós-laço? Argumente que as pós-condições são satisfeitas.</li>
+        <li>Forneça o pseudocódigo.</li>
+        <li>Considere os casos especiais a seguir e indique, caso necessário, quais adaptações devem ser feitas no
+          algoritmo para atendê-los. (i) A lista tem apenas \(1\) elemento. (ii) Nenhum elemento é maior que o pivô.
+          (iii) Exceto o pivô, todo os outros elementos são maiores que o pivô.</li>
+        <li>Forneça a complexidade de tempo de pior caso em notação \(O\).</li>
+      </ol>
+    </li>
+  </ul>
+
+  <hr />
+
+  <h2>RESPOSTA - Questão 1</h2>
+
+  <h3>a) Medida de progresso e argumento sobre a terminação do algoritmo</h3>
+  <p>A medida de progresso do algoritmo é o movimento dos índices i e j. A cada iteração, o índice i avança à direita se
+    L[i] &le; L[1], e o índice j avança à esquerda se L[j] &gt; L[1]. A medida de progresso é dada pelo avanço dos
+    índices em direção ao encontro. O algoritmo termina quando j &lt; i, o que indica que todos os elementos já foram
+    classificados de acordo com a comparação com o pivô.</p>
+
+  <h3>b) Estabelecimento do invariante do laço</h3>
+  <p>No início do laço, o índice i está em 2 e j na última posição da lista. Antes de iniciar o laço, as listas à
+    esquerda de i (posições menores) contêm elementos menores ou iguais ao pivô, e as listas à direita de j (posições
+    maiores) contêm elementos maiores que o pivô. Isso garante que o invariante seja verdadeiro na primeira iteração.
+  </p>
+
+  <h3>c) Código do laço e manutenção do invariante</h3>
+  <pre>
+while j >= i:
+    if L[i] <= L[1]:
+        i += 1
+    elif L[j] > L[1]:
+        j -= 1
+    else:
+        trocar(L[i], L[j])
+        i += 1
+        j -= 1
+  </pre>
+  <p>Esse código mantém o invariante do laço, já que a cada iteração, os elementos à esquerda de i são menores ou iguais
+    ao pivô e os elementos à direita de j são maiores que o pivô.</p>
+
+  <h3>d) Argumento para j = i - 1</h3>
+  <p>O invariante do laço e a condição de saída garantem que, quando j &lt; i, o índice j está na posição imediatamente
+    anterior ao índice i. Nesse momento, todos os elementos menores ou iguais ao pivô estão à esquerda de i, e os
+    maiores estão à direita de j, garantindo que j = i - 1.</p>
+
+  <h3>e) Código pós-laço e verificação das pós-condições</h3>
+  <p>Após a execução do laço, o pivô L[1] deve ser colocado na posição correta, isto é, na posição k. Para isso,
+    trocamos o valor de L[1] com L[i-1]. Dessa forma, o pivô estará na posição correta, e as listas à esquerda contêm
+    elementos menores ou iguais ao pivô, enquanto as listas à direita contêm elementos maiores.</p>
+
+  <h3>f) Pseudocódigo</h3>
+  <pre>
+função partição(L):
+    pivô = L[1]
+    i = 2
+    j = n
+    enquanto j >= i:
+        se L[i] <= pivô:
+            i += 1
+        senão, se L[j] > pivô:
+            j -= 1
+        senão:
+            trocar(L[i], L[j])
+            i += 1
+            j -= 1
+    trocar(L[1], L[i-1])
+    retorna L
+  </pre>
+
+  <h3>g) Consideração sobre casos especiais</h3>
+  <ul>
+    <li><strong>i) A lista tem apenas 1 elemento:</strong> Neste caso, o algoritmo não precisa fazer nenhuma troca, pois
+      o pivô já está na posição correta.</li>
+    <li><strong>ii) Nenhum elemento é maior que o pivô:</strong> O algoritmo funcionará corretamente, pois todos os
+      elementos serão movidos à esquerda do pivô.</li>
+    <li><strong>iii) Exceto o pivô, todos os outros elementos são maiores que o pivô:</strong> O algoritmo funcionará
+      corretamente, movendo os elementos maiores para a direita do pivô.</li>
+  </ul>
+
+  <h3>h) Complexidade de tempo de pior caso</h3>
+  <p>A complexidade de tempo do pior caso é O(n), pois o algoritmo percorre a lista uma única vez, realizando trocas e
+    comparações em tempo linear.</p>
+
+  <hr />
+
+  <h1>Questão 2</h1>
+  <ul>
+    <li>
+      <p><strong>Questão 2 (Intercalação).</strong> Nesta questão, queremos que você resolva o problema da
+        intercalação
+        de listas.</p>
+      <p><strong>Entrada:</strong> A entrada são duas listas \( L[1..p] \) e \( M[1..q] \) de números, com \(p \geq
+        1\)
+        e \( q \geq 1 \), tal que as duas listas estão ordenadas em ordem crescente. Lembre-se que as nossas listas
+        nessa disciplina começam com o índice \(1\).</p>
+      <p><strong>Objetivo:</strong> Seu objetivo é especificar um algoritmo de <strong>tempo linear</strong>
+        \(\Theta(n)\) para criar uma terceira lista \( N[1..p+q] \) contendo os elementos das listas \(L\) e \(M\) em
+        ordem crescente. Essa nova lista \(N\) deve ser retornada como resultado do seu algoritmo.</p>
+      <p><strong>Saída:</strong> Lista \( N[1..p+q] \) ordenada em ordem crescente.</p>
+      <p><strong>Obs. 1:</strong> Este problema poderia ser resolvido simplesmente copiando os elementos de \(L\) e
+        \(M\) em \(N\) e ordenando a lista \(N\), mas neste caso gastaria tempo \(\Theta(n\log{n})\).</p>
+      <p><strong>Obs. 2:</strong> Este problema é uma leve modificação de um problema semelhante que ocorre como
+        subrotina no algoritmo de ordenação Mergesort.</p>
+      <p><strong>Passos Básicos:</strong> Utilize dois índices \(i\) e \(j\). O índice \(i\) indica a posição do menor
+        elemento da lista \(L\) que ainda não foi copiado para a lista de saída, e o índice \(j\) indica a posição do
+        menor elemento da lista \(M\) que ainda não foi copiado para a lista de saída. Em cada iteração, avançe o
+        \(i\)
+        se \(L[i] \leq M[j]\). Caso contrário, avançe o \(j\). A repetição termina quando \((i &gt; p)\) ou \((j &gt;
+        q)\). Neste momento, uma das listas ficou vazia, mas a outra ainda pode conter elementos. É preciso copiar a
+        lista resultante no vetor de saída.</p>
+      <h2>Forneça resposta para cada um dos itens abaixo:</h2>
+      <ol type="a">
+        <li>Forneça uma invariante de laço para o laço principal do seu algoritmo.</li>
+        <li>Forneça uma medida de progresso, e argumente que o algoritmo termina.</li>
+        <li>Indique como estabelecer o invariante do laço, ou seja, quais ações no código pré-laço tornam o invariante
+          do laço verdadeiro na primeira iteração. Justifique.</li>
+        <li>Qual o código do laço? Argumente que ele mantém o invariante do laço.</li>
+        <li>Argumente que o invariante do laço e a condição de saída garantem que, assim que a execução sair do laço
+          teremos \((i &gt; p)\) ou \((j &gt; q)\).</li>
+        <li>Qual o código pós-laço? Argumente que as pós-condições são satisfeitas.</li>
+        <li>Forneça o pseudocódigo.</li>
+        <li>Considere os casos especiais a seguir e indique, caso necessário, quais adaptações devem ser feitas no
+          algoritmo para atendê-los. (i) As listas dadas como entrada têm apenas \(1\) elemento. (ii) Os elementos de
+          uma das listas são todos iguais.</li>
+        <li>Forneça a complexidade de tempo de pior caso em notação \(O\).</li>
+      </ol>
+    </li>
+  </ul>
+
+  <hr />
+
+  <h2>RESPOSTA - Questão 2</h2>
+  <h3>a) Invariante de laço para o laço principal</h3>
+  <p>O invariante do laço é: os elementos em N[1..i+j-1] estão ordenados, ou seja, a lista de saída N contém os
+    elementos já processados de L e M.</p>
+
+  <h3>b) Medida de progresso e argumento sobre a terminação do algoritmo</h3>
+  <p>A medida de progresso do algoritmo é o avanço dos índices i e j nas listas L e M, respectivamente. O algoritmo
+    termina quando um dos índices ultrapassa o tamanho de suas respectivas listas (i > p ou j > q), garantindo que
+    todos
+    os elementos tenham sido copiados para N.</p>
+
+  <h3>c) Estabelecimento do invariante do laço</h3>
+  <p>Antes de iniciar o laço, temos N vazio, e os índices i e j apontam para o primeiro elemento das listas L e M. O
+    invariante é mantido desde a primeira iteração, onde o menor dos dois elementos é adicionado a N.</p>
+
+  <h3>d) Código do laço e manutenção do invariante</h3>
+  <pre>
+while i <= p and j <= q:
+    se L[i] <= M[j]:
+        N[k] = L[i]
+        i += 1
+    senão:
+        N[k] = M[j]
+        j += 1
+    k += 1
+  </pre>
+  <p>O código do laço mantém o invariante, pois em cada iteração o menor elemento entre L[i] e M[j] é inserido em N.
+  </p>
+
+  <h3>e) Argumento para a condição de saída</h3>
+  <p>A condição de saída garante que, ao sair do laço, um dos índices i ou j ultrapassou o tamanho da lista
+    correspondente, e todos os elementos foram copiados para N.</p>
+
+  <h3>f) Código pós-laço e verificação das pós-condições</h3>
+  <p>Após a execução do laço, copiamos o restante dos elementos da lista L ou M para N. Se uma das listas foi
+    completamente processada, todos os elementos restantes da outra lista já estão ordenados e podem ser copiados
+    diretamente.</p>
+
+  <h3>g) Pseudocódigo</h3>
+  <pre>
+função intercalação(L, M):
+    i = 1
+    j = 1
+    k = 1
+    enquanto i <= p e j <= q:
+        se L[i] <= M[j]:
+            N[k] = L[i]
+            i += 1
+        senão:
+            N[k] = M[j]
+            j += 1
+        k += 1
+    enquanto i <= p:
+        N[k] = L[i]
+        i += 1
+        k += 1
+    enquanto j <= q:
+        N[k] = M[j]
+        j += 1
+        k += 1
+    retorna N
+  </pre>
+
+  <h3>h) Consideração sobre casos especiais</h3>
+  <ul>
+    <li><strong>i) As listas têm apenas 1 elemento:</strong> O algoritmo funcionará corretamente, copiando diretamente
+      os elementos de L e M para N.</li>
+    <li><strong>ii) Os elementos de uma das listas são todos iguais:</strong> O algoritmo funcionará corretamente, já
+      que a ordem dos elementos é mantida durante a intercalação.</li>
+  </ul>
+
+  <h3>i) Complexidade de tempo de pior caso</h3>
+  <p>A complexidade de tempo do pior caso é O(p + q), pois o algoritmo percorre cada lista uma única vez, realizando
+    uma
+    operação constante para cada elemento.</p>
+
+
+</body>
+
+</html>
