@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Respostas - Avaliação Continuada 04</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <h1>Respostas - Avaliação Continuada 04</h1>
+  <h1>(Algoritmos Recursivos e Relações de Recorrência)</h1>
+  <hr />
+
+  <h1>Questão 1</h1>
+  <p>
+    Utilize o método da substituição para calcular a
+    complexidade de tempo de pior caso do algoritmo recursivo abaixo.
+    No algoritmo abaixo, o parâmetro \(V\) da função é um
+    vetor de inteiros e o parâmetro \(N\) é o tamanho do vetor.
+    A operação de divisão usada é a divisão inteira, ou seja,
+    é a divisão que sempre resulta em um inteiro.
+  </p>
+  <pre><code>
+        Algoritmo(V, n):
+          Se n == 0 entao
+            Retorne 0
+          Senao
+            soma = 0
+            Para j = 1, ..., n faça
+              soma = soma + V[j]
+            Retorne soma + Algoritmo(V, n/2)
+  </code></pre>
+  <p><strong>Solução:</strong></p>
+  <p>
+    A relação de recorrência para o algoritmo é dada por:
+    $$ T(n) = T(n/2) + \Theta(n) $$
+    O termo \(\Theta(n)\) vem do laço "Para j = 1, ..., n faça", que executa \(n\) vezes. A chamada recursiva é para \(n/2\). O caso base é \(T(0) = \Theta(1)\), mas para simplificar a análise assintótica, podemos usar \(T(1) = \Theta(1)\).
+  </p>
+  <p>
+    Vamos supor que \(T(n) \leq cn\) para alguma constante \(c > 0\).
+  </p>
+  <p>
+    <strong>Hipótese Indutiva:</strong> \(T(k) \leq ck\) para \(k < n\).
+  </p>
+  <p>
+    Substituindo na recorrência:
+    $$ T(n) \leq c(n/2) + dn $$
+    onde \(dn\) representa o termo \(\Theta(n)\), com \(d > 0\) sendo uma constante.
+    $$ T(n) \leq cn/2 + dn $$
+    $$ T(n) \leq n(c/2 + d) $$
+    Para que \(T(n) \leq cn\), precisamos que:
+    $$ n(c/2 + d) \leq cn $$
+    $$ c/2 + d \leq c $$
+    $$ d \leq c - c/2 $$
+    $$ d \leq c/2 $$
+    Isso é verdade se escolhermos \(c \geq 2d\). Como \(d > 0\), podemos encontrar tal \(c\).
+  </p>
+  <p>
+    Portanto, pelo método da substituição, a complexidade de tempo de pior caso do algoritmo é \(T(n) = O(n)\).
+    Como o custo da função em cada nível (sem contar as chamadas recursivas) é \(\Omega(n)\), e a chamada recursiva principal contribui com \(T(n/2)\), temos que \(T(n) \ge dn\), então \(T(n) = \Omega(n)\).
+  </p>
+  <p>
+    Logo, \(T(n) = \Theta(n)\).
+  </p>
+  <hr />
+
+  <h1>Questão 2</h1>
+  <p>
+    É possível provar que a solução para a recorrência
+    \(T(n) = 4T(n/3)+ n\) é \(T(n) = \Theta(n^{\log_3 4})\).
+    Mostre que uma prova de substituição que considere
+    \(T(n) \leq cn^{\log_3 4}\) falha. Depois, mostre como
+    subtrair um termo de ordem mais baixa para fazer com
+    que uma prova de substituição funcione. Basta provar
+    apenas o limitante superior, não precisa provar o inferior.
+  </p>
+  <p><strong>Solução:</strong></p>
+  <p>A recorrência é \(T(n) = 4T(n/3) + n\).</p>
+  <p><strong>Parte 1: Falha da prova com \(T(n) \leq cn^{\log_3 4}\)</strong></p>
+  <p>
+    Assumimos \(T(k) \leq ck^{\log_3 4}\) para \(k < n\). Queremos mostrar \(T(n) \leq cn^{\log_3 4}\).
+    Substituindo na recorrência:
+    $$ T(n) = 4T(n/3) + n $$
+    $$ T(n) \leq 4 \left( c(n/3)^{\log_3 4} \right) + n $$
+    $$ T(n) \leq 4c \frac{n^{\log_3 4}}{3^{\log_3 4}} + n $$
+    Sabemos que \(3^{\log_3 4} = 4\). Então:
+    $$ T(n) \leq 4c \frac{n^{\log_3 4}}{4} + n $$
+    $$ T(n) \leq cn^{\log_3 4} + n $$
+    Para que a prova funcione, precisaríamos que \(cn^{\log_3 4} + n \leq cn^{\log_3 4}\).
+    Isso implicaria \(n \leq 0\), o que não é verdade para \(n > 0\).
+    Portanto, a suposição inicial falha.
+  </p>
+  <p><strong>Parte 2: Prova de substituição com termo de ordem mais baixa</strong></p>
+  <p>
+    Vamos tentar uma nova hipótese: \(T(n) \leq cn^{\log_3 4} - dn\), onde \(c, d > 0\) são constantes.
+    Assumimos \(T(k) \leq ck^{\log_3 4} - dk\) para \(k < n\).
+    Substituindo na recorrência:
+    $$ T(n) = 4T(n/3) + n $$
+    $$ T(n) \leq 4 \left( c(n/3)^{\log_3 4} - d(n/3) \right) + n $$
+    $$ T(n) \leq 4c \frac{n^{\log_3 4}}{3^{\log_3 4}} - \frac{4dn}{3} + n $$
+    $$ T(n) \leq 4c \frac{n^{\log_3 4}}{4} - \frac{4dn}{3} + n $$
+    $$ T(n) \leq cn^{\log_3 4} - \frac{4dn}{3} + n $$
+    $$ T(n) \leq cn^{\log_3 4} - dn \left( \frac{4}{3} - \frac{1}{d} \right) $$
+    Queremos que isso seja \( \leq cn^{\log_3 4} - dn \). Então precisamos:
+    $$ cn^{\log_3 4} - dn \left( \frac{4}{3} - \frac{1}{d} \right) \leq cn^{\log_3 4} - dn $$
+    Isso implica:
+    $$ -dn \left( \frac{4}{3} - \frac{1}{d} \right) \leq -dn $$
+    Como \(-dn\) é negativo (para \(d, n > 0\)), ao dividir por \(-dn\), invertemos a desigualdade:
+    $$ \frac{4}{3} - \frac{1}{d} \geq 1 $$
+    $$ \frac{4}{3} - 1 \geq \frac{1}{d} $$
+    $$ \frac{1}{3} \geq \frac{1}{d} $$
+    Isso é verdade se \(d \geq 3\).
+    Podemos escolher \(d = 3\) (ou qualquer valor maior). Também precisamos garantir que \(cn^{\log_3 4} - dn \geq 0\) para os casos base.
+    Para \(T(1)\), se \(T(1) = \Theta(1)\), digamos \(T(1) = k_0\).
+    Então \(k_0 \leq c(1)^{\log_3 4} - d(1) \Rightarrow k_0 \leq c - d\).
+    Como \(d \ge 3\), podemos escolher \(c\) suficientemente grande, por exemplo, \(c \geq k_0 + d\).
+    Com \(d \geq 3\), a prova de substituição funciona.
+  </p>
+  <hr />
+
+  <h1>Questão 3</h1>
+  <p>
+    Use o método da árvore de recursão para dar um bom limitante
+    superior assintótico para a recorrência
+    \(T(n) = 4T(\lfloor n/2 \rfloor)+cn\), onde \(c\)
+    é uma constante positiva.
+  </p>
+  <p><strong>Solução:</strong></p>
+  <p>
+    Para simplificar, vamos ignorar o piso e analisar \(T(n) = 4T(n/2) + cn\).
+  </p>
+  <p>
+    A árvore de recursão terá a seguinte estrutura:
+  </p>
+  <ul>
+    <li><strong>Nível 0 (raiz):</strong> O custo é \(cn\). Temos 1 nó.</li>
+    <li><strong>Nível 1:</strong> O problema original \(n\) é dividido em 4 subproblemas de tamanho \(n/2\). Cada um tem um custo adicional de \(c(n/2)\). O custo total neste nível é \(4 \cdot c(n/2) = 2cn\).</li>
+    <li><strong>Nível 2:</strong> Cada subproblema de tamanho \(n/2\) é dividido em 4 subproblemas de tamanho \(n/4\). Haverá \(4^2 = 16\) subproblemas. Cada um tem um custo adicional de \(c(n/4)\). O custo total neste nível é \(4^2 \cdot c(n/4) = 16c(n/4) = 4cn\).</li>
+    <li><strong>Nível \(i\):</strong> Haverá \(4^i\) subproblemas, cada um de tamanho \(n/2^i\). O custo adicional em cada nó neste nível é \(c(n/2^i)\). O custo total neste nível é \(4^i \cdot c(n/2^i) = c n (4/2)^i = cn \cdot 2^i\).</li>
+  </ul>
+  <p>
+    A recursão para quando o tamanho do subproblema se torna 1 (ou uma constante pequena). Isso acontece quando \(n/2^i = 1\), ou seja, \(2^i = n\), o que implica \(i = \log_2 n\). Este é o número de níveis da árvore (ou profundidade).
+  </p>
+  <p>
+    O custo total \(T(n)\) é a soma dos custos em todos os níveis:
+    $$ T(n) = \sum_{i=0}^{\log_2 n - 1} (\text{custo no nível } i) + (\text{custo das folhas}) $$
+    $$ T(n) = \sum_{i=0}^{\log_2 n - 1} cn \cdot 2^i + (\text{custo das folhas}) $$
+    O custo das folhas: No nível \(\log_2 n\), temos \(4^{\log_2 n}\) folhas.
+    Sabemos que \(4^{\log_2 n} = (2^2)^{\log_2 n} = (2^{\log_2 n})^2 = n^2\).
+    Cada folha tem um custo constante, digamos \(T(1) = \Theta(1)\). Então o custo total das folhas é \(\Theta(n^2)\).
+  </p>
+  <p>
+    Agora, somamos os custos dos níveis internos:
+    $$ \sum_{i=0}^{\log_2 n - 1} cn \cdot 2^i = cn \sum_{i=0}^{\log_2 n - 1} 2^i $$
+    Esta é uma progressão geométrica \(\sum_{k=0}^{m-1} r^k = \frac{r^m - 1}{r-1}\).
+    Aqui, \(r=2\) e \(m = \log_2 n\).
+    $$ cn \left( \frac{2^{\log_2 n} - 1}{2-1} \right) = cn (n - 1) = cn^2 - cn $$
+    Então, o custo dos níveis internos é \(\Theta(n^2)\).
+  </p>
+  <p>
+    O custo total é a soma do custo dos níveis internos e o custo das folhas:
+    $$ T(n) = (cn^2 - cn) + \Theta(n^2) $$
+    $$ T(n) = \Theta(n^2) $$
+  </p>
+  <p>
+    Assim, um bom limitante superior assintótico para a recorrência é \(O(n^2)\). Como a soma já é dominada pelo termo quadrático, podemos dizer que \(T(n) = \Theta(n^2)\).
+  </p>
+  <hr />
+
+  <h1>Questão 4</h1>
+  <p>
+    Use o teorema mestre para fornecer limites assintóticos restritos para as recorrências a seguir.
+  </p>
+  <ol type="a">
+    <li>\(T(n) = 2T(n/4) + 1\)</li>
+    <li>\(T(n) = 2T(n/4) + n^2\)</li>
+    <li>\(T(n) = 2T(n/4) + n\)</li>
+    <li>\(T(n) = 2T(n/4) + \sqrt{n}\)</li>
+  </ol>
+  <p><strong>Solução:</strong></p>
+  <p>
+    O Teorema Mestre se aplica a recorrências da forma \(T(n) = aT(n/b) + f(n)\), onde \(a \geq 1\), \(b > 1\).
+    Comparamos \(f(n)\) com \(n^{\log_b a}\).
+  </p>
+  <p>
+    Para todas as recorrências dadas, \(a=2\) e \(b=4\).
+    Calculamos \(n^{\log_b a} = n^{\log_4 2} = n^{1/2} = \sqrt{n}\).
+  </p>
+
+  <p><strong>a) \(T(n) = 2T(n/4) + 1\)</strong></p>
+  <p>
+    Temos \(f(n) = 1\).
+    Comparamos \(f(n) = 1\) com \(n^{\log_4 2} = \sqrt{n}\).
+    Como \(1 = O(n^{1/2 - \epsilon})\) para \(\epsilon = 1/2\) (pois \(1 = n^0\), e \(0 < 1/2\)), estamos no <strong>Caso 1</strong> do Teorema Mestre.
+    Portanto, \(T(n) = \Theta(n^{\log_b a}) = \Theta(\sqrt{n})\).
+  </p>
+
+  <p><strong>b) \(T(n) = 2T(n/4) + n^2\)</strong></p>
+  <p>
+    Temos \(f(n) = n^2\).
+    Comparamos \(f(n) = n^2\) com \(n^{\log_4 2} = \sqrt{n}\).
+    Como \(n^2 = \Omega(n^{1/2 + \epsilon})\) para \(\epsilon = 3/2\) (pois \(2 > 1/2\)), estamos no <strong>Caso 3</strong> do Teorema Mestre.
+    Precisamos verificar a condição de regularidade: \(af(n/b) \leq kf(n)\) para alguma constante \(k < 1\) e \(n\) suficientemente grande.
+    \(a f(n/b) = 2 (n/4)^2 = 2 (n^2/16) = n^2/8\).
+    Queremos \(n^2/8 \leq k n^2\). Isso é verdade para \(k = 1/8\), que é \(< 1\).
+    A condição de regularidade é satisfeita.
+    Portanto, \(T(n) = \Theta(f(n)) = \Theta(n^2)\).
+  </p>
+
+  <p><strong>c) \(T(n) = 2T(n/4) + n\)</strong></p>
+  <p>
+    Temos \(f(n) = n\).
+    Comparamos \(f(n) = n\) com \(n^{\log_4 2} = \sqrt{n}\).
+    Como \(n = \Omega(n^{1/2 + \epsilon})\) para \(\epsilon = 1/2\) (pois \(1 > 1/2\)), estamos no <strong>Caso 3</strong> do Teorema Mestre.
+    Verificamos a condição de regularidade: \(af(n/b) \leq kf(n)\).
+    \(a f(n/b) = 2 (n/4) = n/2\).
+    Queremos \(n/2 \leq kn\). Isso é verdade para \(k = 1/2\), que é \(< 1\).
+    A condição de regularidade é satisfeita.
+    Portanto, \(T(n) = \Theta(f(n)) = \Theta(n)\).
+  </p>
+
+  <p><strong>d) \(T(n) = 2T(n/4) + \sqrt{n}\)</strong></p>
+  <p>
+    Temos \(f(n) = \sqrt{n} = n^{1/2}\).
+    Comparamos \(f(n) = n^{1/2}\) com \(n^{\log_4 2} = n^{1/2}\).
+    Como \(f(n) = \Theta(n^{\log_b a})\), estamos no <strong>Caso 2</strong> do Teorema Mestre.
+    Portanto, \(T(n) = \Theta(n^{\log_b a} \log n) = \Theta(\sqrt{n} \log n)\).
+  </p>
+  <hr />
+
+</body>
+</html>
