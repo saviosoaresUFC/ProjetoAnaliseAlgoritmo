@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Solução da Avaliação Continuada 05</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <h1>Solução da Avaliação Continuada 05</h1>
+  <hr />
+
+  <h1>Questão 1</h1>
+  <p><strong>(Encontrar o máximo de um vetor)</strong></p>
+  <p>
+    Esta questão pede o projeto e a análise de dois algoritmos de divisão e conquista para encontrar o elemento máximo em um vetor de \(n\) números.
+  </p>
+
+  <h2>Abordagem 1: Subproblema de tamanho \(n-1\)</h2>
+  <p>
+    <strong>Estratégia:</strong>
+    <ol>
+      <li><strong>Caso Base:</strong> Se o vetor tem um único elemento (\(n=1\)), ele é o máximo.</li>
+      <li><strong>Passo Recursivo:</strong> Para um vetor de tamanho \(n\), encontramos o máximo dos primeiros \(n-1\) elementos recursivamente e, em seguida, comparamos esse resultado com o \(n\)-ésimo elemento. O maior dos dois é o máximo global.</li>
+    </ol>
+  </p>
+  <p>
+    <strong>Análise de Complexidade:</strong>
+    A relação de recorrência para o tempo de execução \(T(n)\) é:
+    $$T(n) = T(n-1) + O(1)$$
+    Onde \(T(n-1)\) é o custo para resolver o subproblema e \(O(1)\) é o custo constante da comparação. Essa recorrência se expande para uma soma aritmética, resultando em uma complexidade de tempo de pior caso de <strong>\(O(n)\)</strong>.
+  </p>
+  
+  <hr>
+
+  <h2>Abordagem 2: Dois subproblemas de tamanho \(n/2\)</h2>
+  <p>
+    <strong>Estratégia:</strong>
+    <ol>
+      <li><strong>Caso Base:</strong> Se o vetor tem um único elemento (\(n=1\)), ele é o máximo.</li>
+      <li><strong>Divisão:</strong> Dividimos o vetor em duas metades de tamanho aproximadamente \(n/2\).</li>
+      <li><strong>Conquista:</strong> Encontramos o máximo de cada metade através de chamadas recursivas.</li>
+      <li><strong>Combinação:</strong> Comparamos os dois máximos retornados e o maior deles é o máximo do vetor completo.</li>
+    </ol>
+  </p>
+  <p>
+    <strong>Análise de Complexidade:</strong>
+    A relação de recorrência para esta abordagem é:
+    $$T(n) = 2T(n/2) + O(1)$$
+    Usando o <strong>Teorema Mestre</strong>, com \(a=2\), \(b=2\), e \(f(n) = O(1) = O(n^0)\), temos que \(\log_b a = \log_2 2 = 1\). Como \(f(n) = O(n^{1-\epsilon})\) para \(\epsilon=1\), estamos no Caso 1 do teorema. A complexidade de pior caso é <strong>\(O(n^{\log_b a}) = O(n)\)</strong>.
+  </p>
+
+  <h2>Qual a melhor abordagem?</h2>
+  <p>
+    Em termos de complexidade de pior caso, <strong>ambas as abordagens são equivalentes</strong>, com complexidade \(O(n)\).
+  </p>
+  <p>
+    No entanto, a <strong>segunda abordagem (dividir em metades) é conceitualmente melhor</strong> e mais alinhada com o paradigma de divisão e conquista. Sua árvore de recursão tem profundidade \(O(\log n)\), em oposição à profundidade \(O(n)\) da primeira abordagem. Isso resulta em um uso mais eficiente da pilha de chamadas e abre a possibilidade de otimização via paralelismo, onde as duas metades podem ser processadas simultaneamente.
+  </p>
+
+  <hr />
+
+  <h1>Questão 2</h1>
+  <p><strong>(Transposto de um Grafo)</strong></p>
+  <p>
+    Para calcular o grafo transposto \(G^T\), invertemos a direção de todas as arestas de \(G\). A seguir, descrevemos algoritmos eficientes para as duas representações principais.
+  </p>
+
+  <h2>Representação por Lista de Adjacências</h2>
+  <p>
+    <strong>Algoritmo:</strong>
+    <ol>
+      <li>Crie uma nova estrutura de listas de adjacências para \(G^T\) (\(AdjT\)) com \(|V|\) listas vazias.</li>
+      <li>Para cada vértice \(u\) em \(G\):</li>
+      <li>Para cada vértice \(v\) na lista \(Adj[u]\) de \(G\):</li>
+      <ul>
+          <li>Esta aresta \((u,v)\) em \(G\) corresponde a uma aresta \((v,u)\) em \(G^T\).</li>
+          <li>Adicione \(u\) à lista \(AdjT[v]\).</li>
+      </ul>
+    </ol>
+  </p>
+  <p>
+    <strong>Análise de Tempo de Execução:</strong> A inicialização leva \(O(V)\). Os laços percorrem cada vértice e cada aresta uma única vez. Portanto, o tempo total de execução é <strong>\(O(V+E)\)</strong>.
+  </p>
+
+  <hr>
+  
+  <h2>Representação por Matriz de Adjacências</h2>
+  <p>
+    <strong>Algoritmo:</strong>
+    <ol>
+      <li>Crie uma nova matriz \(A^T\) de tamanho \(|V| \times |V|\), preenchida com zeros.</li>
+      <li>Para cada linha \(i\) de 0 a \(|V|-1\):</li>
+      <li>Para cada coluna \(j\) de 0 a \(|V|-1\):</li>
+      <ul>
+          <li>Atribua \(A^T[j][i] = A[i][j]\).</li>
+      </ul>
+    </ol>
+  </p>
+  <p>
+    <strong>Análise de Tempo de Execução:</strong> O algoritmo consiste em dois laços aninhados que percorrem toda a matriz \(|V| \times |V|\). A operação interna é uma simples atribuição. O tempo de execução total é <strong>\(O(V^2)\)</strong>.
+  </p>
+  
+  <hr />
+
+  <h1>Questão 3</h1>
+  <p><strong>(Sorvedouro Universal)</strong></p>
+  <p>
+    Um <strong>sorvedouro universal</strong> é um vértice com grau de entrada \(|V|-1\) e grau de saída 0. Em uma matriz de adjacências \(A\), isso corresponde a um vértice \(k\) cuja linha \(A[k][\cdot]\) é toda de zeros e cuja coluna \(A[\cdot][k]\) é toda de uns (exceto por \(A[k][k]\), que deve ser 0). Um grafo pode ter no máximo um sorvedouro.
+  </p>
+  <p>
+    Podemos encontrar um sorvedouro (ou determinar que não existe) em tempo \(O(V)\) com um algoritmo de duas fases.
+  </p>
+
+  <h2>Algoritmo \(O(V)\)</h2>
+  <p>
+    <strong>Fase 1: Encontrar um único candidato</strong>
+    <br>
+    A ideia é eliminar \(|V|-1\) vértices que não podem ser o sorvedouro.
+    <ol>
+      <li>Comece com um candidato, \(c=0\).</li>
+      <li>Itere com um ponteiro \(i\) de 1 até \(|V|-1\).</li>
+      <li>Em cada iteração, verifique a aresta entre o candidato atual \(c\) e o vértice \(i\):
+        <ul>
+          <li>Se \(A[c][i] == 1\) (existe aresta \(c \rightarrow i\)), então \(c\) não pode ser um sorvedouro (pois tem grau de saída > 0). Descartamos \(c\) e definimos \(i\) como o novo candidato.</li>
+          <li>Se \(A[c][i] == 0\) (não existe aresta \(c \rightarrow i\)), então \(i\) não pode ser um sorvedouro (pois seu grau de entrada não pode ser \(|V|-1\), já que falta a aresta vinda de \(c\)). Descartamos \(i\) e mantemos \(c\) como candidato.</li>
+        </ul>
+      </li>
+    </ol>
+    Ao final deste laço, teremos um único candidato restante. Esta fase realiza \(|V|-1\) comparações, levando tempo <strong>\(O(V)\)</strong>.
+  </p>
+
+  <p>
+    <strong>Fase 2: Verificar o candidato</strong>
+    <br>
+    Agora, verificamos se o candidato \(c\) encontrado é, de fato, um sorvedouro universal.
+    <ol>
+      <li>Percorra todos os vértices \(i\) de 0 a \(|V|-1\).</li>
+      <li>Verifique duas condições para o candidato \(c\):
+        <ul>
+            <li><strong>Grau de saída 0:</strong> \(A[c][i] == 0\) para todo \(i\).</li>
+            <li><strong>Grau de entrada \(|V|-1\):</strong> \(A[i][c] == 1\) para todo \(i \neq c\).</li>
+        </ul>
+      </li>
+      <li>Se o candidato \(c\) falhar em qualquer uma dessas verificações, não há sorvedouro universal no grafo. Caso contrário, \(c\) é o sorvedouro.</li>
+    </ol>
+    Esta fase de verificação também requer uma única passagem pelos vértices, levando tempo <strong>\(O(V)\)</strong>.
+  </p>
+
+  <p>
+    Como ambas as fases levam \(O(V)\), o tempo de execução total do algoritmo é <strong>\(O(V) + O(V) = O(V)\)</strong>.
+  </p>
+
+  <hr/>
+
+</body>
+</html>
